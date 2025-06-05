@@ -1,0 +1,15 @@
+// Importar Variables de Bootstrap (opcional, para personalización avanzada)
+// Si quieres sobrescribir variables de Bootstrap, hazlo ANTES de importar bootstrap.scss
+// Ejemplo: $primary: #007bff;
+
+// Importar Bootstrap SASS
+@import "~bootstrap/scss/bootstrap";
+
+// Tus estilos personalizados para el panel de administración pueden ir aquí abajo
+// Por ejemplo:
+// body {
+//   font-family: 'Figtree', sans-serif; // Si quieres usar la fuente que Breeze podría haber configurado
+// }
+// .admin-sidebar {
+//    background-color: #343a40;
+// }
