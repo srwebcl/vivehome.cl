@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // Importar BelongsTo
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PropertyCustomFieldValue extends Model
 {
@@ -28,6 +28,7 @@ class PropertyCustomFieldValue extends Model
 
     /**
      * Define la relación: este Valor pertenece a una Definición de Campo Personalizado.
+     * Esta es la relación que faltaba.
      */
     public function definition(): BelongsTo
     {
