@@ -12,7 +12,9 @@
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h4>Listado de Propiedades del Sistema</h4>
-                {{-- Aquí podría ir un botón para "Crear Propiedad" si el admin también puede hacerlo --}}
+                <a href="{{ route('admin.all-properties.create') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Crear Nueva Propiedad
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -36,7 +38,7 @@
                         <label for="status" class="form-label">Estado</label>
                         <select name="status" id="status" class="form-select form-select-sm">
                             <option value="">Todos</option>
-                            @foreach($statuses as $statusValue) {{-- Cambié $status a $statusValue para evitar conflicto con $property->status --}}
+                            @foreach($statuses as $statusValue)
                                 <option value="{{ $statusValue }}" {{ request('status') == $statusValue ? 'selected' : '' }}>
                                     {{ ucfirst($statusValue) }}
                                 </option>
@@ -66,7 +68,6 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        {{-- CORREGIDO: Usar operation_type consistentemente --}}
                         <label for="operation_type" class="form-label">Tipo Operación</label>
                         <select name="operation_type" id="operation_type" class="form-select form-select-sm">
                             <option value="">Ambas</option>
@@ -92,9 +93,9 @@
                             <th>Título</th>
                             <th>Asesor</th>
                             <th>Categoría</th>
-                            <th>Operación</th> {{-- Nombre de columna en tabla --}}
+                            <th>Operación</th>
                             <th>Precio</th>
-                            <th>Estado (Actualizar)</th> {{-- Cabecera actualizada --}}
+                            <th>Estado (Actualizar)</th>
                             <th>Fecha Creación</th>
                             <th>Acciones</th>
                         </tr>
@@ -104,15 +105,13 @@
                             <tr>
                                 <td>{{ $property->id }}</td>
                                 <td>
-                                    {{-- Enlace a detalle ya estaba correcto --}}
                                     <a href="{{ route('admin.all-properties.show', $property->id) }}">{{ Str::limit($property->title, 40) }}</a>
                                 </td>
                                 <td>{{ $property->user->name ?? 'N/A' }}</td>
                                 <td>{{ $property->category->name ?? 'N/A' }}</td>
-                                <td>{{ ucfirst($property->operation_type) }}</td> {{-- CORREGIDO: Usar operation_type --}}
+                                <td>{{ ucfirst($property->operation_type) }}</td>
                                 <td>{{ $property->price ? ($property->currency ?? 'CLP') . ' ' . number_format($property->price, 0, ',', '.') : 'N/A' }}</td>
                                 <td>
-                                    {{-- Formulario para cambiar estado --}}
                                     <form action="{{ route('admin.all-properties.updateStatus', $property->id) }}" method="POST" class="d-inline-flex align-items-center">
                                         @csrf
                                         @method('PATCH')
@@ -120,14 +119,11 @@
                                             <option value="Disponible" {{ $property->status == 'Disponible' ? 'selected' : '' }}>Disponible</option>
                                             <option value="Arrendada" {{ $property->status == 'Arrendada' ? 'selected' : '' }}>Arrendada</option>
                                             <option value="Vendida" {{ $property->status == 'Vendida' ? 'selected' : '' }}>Vendida</option>
-                                            {{-- Puedes añadir más estados si los tienes definidos en el controlador --}}
                                         </select>
-                                        {{-- Botón de submit explícito (opcional si usas onchange) --}}
                                         <button type="submit" class="btn btn-sm btn-outline-primary ms-1" title="Guardar cambio de estado">
                                             <i class="bi bi-check-lg"></i>
                                         </button>
                                     </form>
-                                    {{-- Badge para visualización rápida del estado actual --}}
                                     <span class="badge bg-{{ strtolower($property->status) == 'disponible' ? 'success' : (strtolower($property->status) == 'vendida' || strtolower($property->status) == 'arrendada' ? 'danger' : 'secondary') }} ms-2">
                                         {{ $property->status ?? 'N/A' }}
                                     </span>
@@ -135,14 +131,15 @@
                                 <td>{{ $property->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
                                     <a href="{{ route('admin.all-properties.show', $property->id) }}" class="btn btn-sm btn-info me-1" title="Ver Detalle"><i class="bi bi-eye"></i></a>
-                                    <a href="#" class="btn btn-sm btn-primary me-1" title="Editar (Próximamente)"><i class="bi bi-pencil-square"></i></a>
+                                    <a href="{{ route('admin.all-properties.edit', $property->id) }}" class="btn btn-sm btn-primary me-1" title="Editar"><i class="bi bi-pencil-square"></i></a>
                                     <form action="{{ route('admin.all-properties.destroy', $property->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás realmente seguro de que quieres eliminar esta propiedad? Esta acción no se puede deshacer.');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-sm btn-danger" title="Eliminar Propiedad">
-        <i class="bi bi-trash3"></i>
-    </button>
-</form>                                </td>
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Eliminar Propiedad">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>

@@ -46,7 +46,6 @@
                         @forelse ($properties as $property)
                             <tr>
                                 <td>
-                                    {{-- ENLACE CORREGIDO --}}
                                     <a href="{{ route('asesor.properties.edit', $property) }}">{{ Str::limit($property->title, 40) }}</a>
                                 </td>
                                 <td>{{ $property->category->name ?? 'N/A' }}</td>
@@ -58,11 +57,15 @@
                                     </span>
                                 </td>
                                 <td>
-                                    {{-- BOTÓN CORREGIDO --}}
+                                    {{-- INICIO: CÓDIGO ACTUALIZADO CON BOTÓN "VER" --}}
+                                    <a href="{{ route('public.properties.show', $property->slug) }}" class="btn btn-sm btn-info me-1" title="Ver en Sitio Público" target="_blank">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    
                                     <a href="{{ route('asesor.properties.edit', $property) }}" class="btn btn-sm btn-primary me-1" title="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    {{-- La ruta de eliminar se deja para un paso futuro --}}
+
                                     <form action="{{ route('asesor.properties.destroy', $property) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta propiedad?');">
                                         @csrf
                                         @method('DELETE')
@@ -70,6 +73,7 @@
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </form>
+                                    {{-- FIN: CÓDIGO ACTUALIZADO --}}
                                 </td>
                             </tr>
                         @empty

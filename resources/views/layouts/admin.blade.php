@@ -20,8 +20,8 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('asesor.properties.index') }}">
                     <img src="{{ asset('assets/images/logo.webp') }}" alt="Vive Home Logo" style="height: 30px; margin-right: 10px;" onerror="this.style.display='none'; this.onerror=null;">
-                    Panel Vive Home
                 </a>
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

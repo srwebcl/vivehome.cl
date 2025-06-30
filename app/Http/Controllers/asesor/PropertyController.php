@@ -33,6 +33,7 @@ class PropertyController extends Controller
 
     public function store(Request $request)
     {
+        // --- MODIFICACIÓN 1: Añadido 'is_featured' a la validación ---
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -50,6 +51,7 @@ class PropertyController extends Controller
             'bathrooms' => 'nullable|integer|min:0',
             'parking_lots' => 'nullable|integer|min:0',
             'storage_units' => 'nullable|integer|min:0',
+            'is_featured' => 'nullable|boolean', // <-- CAMPO AÑADIDO
             'features' => 'nullable|array',
             'features.*' => 'exists:property_features,id',
             'custom_fields' => 'nullable|array',
@@ -63,6 +65,11 @@ class PropertyController extends Controller
             $propertyData['user_id'] = Auth::id();
             $propertyData['slug'] = Str::slug($propertyData['title']);
             $propertyData['status'] = 'Disponible';
+            
+            // --- MODIFICACIÓN 2: Procesar correctamente el valor del checkbox ---
+            // $request->boolean() devuelve true si el campo es "1", "true", "on", o si simplemente existe. Devuelve false en caso contrario.
+            $propertyData['is_featured'] = $request->boolean('is_featured');
+
             $property = Property::create($propertyData);
 
             if ($request->has('features')) {
@@ -115,6 +122,7 @@ class PropertyController extends Controller
             abort(403);
         }
         
+        // --- MODIFICACIÓN 3: Añadido 'is_featured' a la validación ---
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -132,6 +140,7 @@ class PropertyController extends Controller
             'bathrooms' => 'nullable|integer|min:0',
             'parking_lots' => 'nullable|integer|min:0',
             'storage_units' => 'nullable|integer|min:0',
+            'is_featured' => 'nullable|boolean', // <-- CAMPO AÑADIDO
             'features' => 'nullable|array', 'features.*' => 'exists:property_features,id',
             'custom_fields' => 'nullable|array', 'custom_fields.*' => 'nullable|string|max:65535',
             'photos' => 'nullable|array',
@@ -146,6 +155,10 @@ class PropertyController extends Controller
             if ($property->title !== $propertyData['title']) {
                 $propertyData['slug'] = Str::slug($propertyData['title']);
             }
+            
+            // --- MODIFICACIÓN 4: Procesar correctamente el valor del checkbox ---
+            $propertyData['is_featured'] = $request->boolean('is_featured');
+            
             $property->update($propertyData);
 
             $property->features()->sync($request->input('features', []));
@@ -185,9 +198,7 @@ class PropertyController extends Controller
                 $property->videos()->delete();
             }
 
-            // --- LÍNEA MODIFICADA ---
             return redirect()->route('asesor.properties.index')->with('success', '¡Propiedad actualizada exitosamente!');
-            // --- FIN LÍNEA MODIFICADA ---
 
         } catch (\Exception $e) {
             Log::error("Error al actualizar propiedad ID {$property->id}: " . $e->getMessage());
